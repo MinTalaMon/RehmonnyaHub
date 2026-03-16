@@ -6,7 +6,7 @@ if (!supabaseService) {
 
 // Seeds starter communities and sample posts for faster local verification.
 const seed = async () => {
-  const { data: communities } = await supabaseService
+  const { data: communities } = await supabaseService!
     .from("communities")
     .upsert(
       [

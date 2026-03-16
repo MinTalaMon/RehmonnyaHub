@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireAuth } from "../middleware/auth.js";
 import type { AuthenticatedRequest } from "../types.js";
 import { createUserClient, supabasePublic } from "../services/supabase.js";
+import { sanitizeInput } from "../utils/sanitize.js";
 
 const router = Router();
 
@@ -52,7 +53,7 @@ router.post("/posts/:id/comments", requireAuth, async (req: AuthenticatedRequest
     .insert({
       post_id: postId,
       user_id: req.user!.id,
-      content: parsed.data.content,
+      content: sanitizeInput(parsed.data.content),
       parent_comment_id: parsed.data.parent_comment_id ?? null
     })
     .select("id, content, parent_comment_id, created_at")

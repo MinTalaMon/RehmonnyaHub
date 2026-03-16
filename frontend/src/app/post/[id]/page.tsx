@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import CommentList from "@/components/CommentList";
 import { apiFetch } from "@/lib/api";
 import { supabase } from "@/lib/supabase";
+import { sanitizeHtml } from "@/lib/sanitize";
 import type { Comment, Post } from "@/types";
 
 interface PostDetail extends Post {
@@ -50,26 +51,39 @@ export default function PostDetailPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="space-y-4">
-      <article className="rounded border bg-white p-4">
-        <h1 className="text-2xl font-bold">{post.title}</h1>
-        <p className="mt-2 whitespace-pre-wrap">{post.content}</p>
+      <article className="rounded-lg border border-mon-red/20 bg-white p-4 shadow-mon-card">
+        <h1 className="text-2xl font-bold text-mon-red">{post.title}</h1>
+        <div
+          className="mt-2 whitespace-pre-wrap text-slate-700"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
+        />
         {post.image_url ? <img src={post.image_url} alt={post.title} className="mt-3 rounded" /> : null}
       </article>
 
-      <section className="rounded border bg-white p-4">
-        <h2 className="mb-2 text-lg font-semibold">Add Comment</h2>
-        <textarea className="w-full rounded border p-2" value={content} onChange={(e) => setContent(e.target.value)} rows={3} />
+      <section className="rounded-lg border border-mon-red/20 bg-white p-4 shadow-mon-card">
+        <h2 className="mb-2 text-lg font-semibold text-mon-red">Add Comment</h2>
+        <textarea
+          className="w-full rounded border border-slate-200 p-2"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          rows={3}
+        />
         <input
-          className="mt-2 w-full rounded border p-2"
+          className="mt-2 w-full rounded border border-slate-200 p-2"
           placeholder="Optional parent comment ID for reply"
           value={parentCommentId}
           onChange={(e) => setParentCommentId(e.target.value)}
         />
-        <button onClick={addComment} className="mt-2 rounded bg-indigo-600 px-4 py-2 text-white">Comment</button>
+        <button
+          onClick={addComment}
+          className="mt-2 rounded bg-mon-red px-4 py-2 text-white shadow-sm transition hover:bg-mon-red-dark"
+        >
+          Comment
+        </button>
       </section>
 
       <section>
-        <h2 className="mb-2 text-lg font-semibold">Comments</h2>
+        <h2 className="mb-2 text-lg font-semibold text-mon-red">Comments</h2>
         <CommentList comments={post.comments} />
       </section>
     </div>

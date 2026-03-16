@@ -106,6 +106,58 @@ create policy "Public read votes" on public.votes for select using (true);
 create policy "Authenticated vote" on public.votes for insert with check (auth.uid() = user_id);
 create policy "Authenticated update own vote" on public.votes for update using (auth.uid() = user_id);
 
+-- Stored procedure for searching posts with prepared statements
+create or replace function public.search_posts(
+  search_query text default '',
+  community_filter text default '',
+  sort_order text default 'hot'
+)
+returns table (
+  id bigint,
+  title text,
+  content text,
+  image_url text,
+  score integer,
+  created_at timestamptz,
+  community_id uuid,
+  community_name text,
+  community_slug text,
+  user_id uuid,
+  username text
+)
+language plpgsql
+security definer
+as $$
+begin
+  return query
+  select
+    p.id,
+    p.title,
+    p.content,
+    p.image_url,
+    p.score,
+    p.created_at,
+    p.community_id,
+    c.name as community_name,
+    c.slug as community_slug,
+    p.user_id,
+    u.username
+  from public.posts p
+  join public.communities c on p.community_id = c.id
+  join public.users u on p.user_id = u.id
+  where
+    (community_filter = '' or c.slug = community_filter) and
+    (search_query = '' or p.title ilike '%' || search_query || '%' or p.content ilike '%' || search_query || '%')
+  order by
+    case
+      when sort_order = 'top' then p.score
+      when sort_order = 'new' then extract(epoch from p.created_at)
+      else p.score + (extract(epoch from p.created_at) - extract(epoch from now())) / 45000
+    end desc
+  limit 50;
+end;
+$$;
+
 insert into storage.buckets (id, name, public)
 values ('post-images', 'post-images', true)
 on conflict (id) do nothing;

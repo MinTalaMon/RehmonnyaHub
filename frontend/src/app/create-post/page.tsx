@@ -55,17 +55,44 @@ export default function CreatePostPage() {
   };
 
   return (
-    <div className="rounded border bg-white p-4">
-      <h1 className="mb-4 text-2xl font-bold">Create Post</h1>
-      <select className="mb-3 w-full rounded border p-2" value={communityId} onChange={(e) => setCommunityId(e.target.value)}>
+    <div className="mx-auto max-w-2xl rounded-lg border border-mon-red/20 bg-white p-6 shadow-mon-card">
+      <h1 className="mb-4 text-2xl font-bold text-mon-red">Create Post</h1>
+      <select
+        className="mb-3 w-full rounded border border-slate-200 bg-white p-2"
+        value={communityId}
+        onChange={(e) => setCommunityId(e.target.value)}
+      >
         {communities.map((community) => (
-          <option key={community.id} value={community.id}>{community.name}</option>
+          <option key={community.id} value={community.id}>
+            {community.name}
+          </option>
         ))}
       </select>
-      <input className="mb-3 w-full rounded border p-2" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
-      <textarea className="mb-3 w-full rounded border p-2" placeholder="Write your post..." rows={5} value={content} onChange={(e) => setContent(e.target.value)} />
-      <input className="mb-3 w-full" type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files?.[0] ?? null)} />
-      <button onClick={submit} className="rounded bg-indigo-600 px-4 py-2 text-white">Publish</button>
+      <input
+        className="mb-3 w-full rounded border border-slate-200 p-2"
+        placeholder="Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <textarea
+        className="mb-3 w-full rounded border border-slate-200 p-2"
+        placeholder="Write your post..."
+        rows={5}
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+      />
+      <input
+        className="mb-3 w-full"
+        type="file"
+        accept="image/*"
+        onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
+      />
+      <button
+        onClick={submit}
+        className="rounded bg-mon-red px-4 py-2 text-white shadow-sm transition hover:bg-mon-red-dark"
+      >
+        Publish
+      </button>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireAuth } from "../middleware/auth.js";
 import type { AuthenticatedRequest } from "../types.js";
 import { createUserClient, supabasePublic } from "../services/supabase.js";
+import { sanitizeInput } from "../utils/sanitize.js";
 
 const router = Router();
 
@@ -15,13 +16,24 @@ const createPostSchema = z.object({
 
 // Feed endpoint supporting latest or top sorting.
 router.get("/", async (req, res) => {
-  const sort = req.query.sort === "top" ? "top" : "latest";
+  const sort = req.query.sort === "top" ? "top" : req.query.sort === "new" ? "new" : "hot";
+  const q = typeof req.query.q === "string" ? req.query.q.trim() : "";
+  const community = typeof req.query.community === "string" ? req.query.community.trim() : "";
 
   let query = supabasePublic
     .from("posts")
     .select(
       "id, title, content, image_url, score, created_at, community_id, communities(name, slug), user_id, users(username)"
     );
+
+  if (community) {
+    query = query.eq("communities.slug", community);
+  }
+
+  if (q) {
+    const like = `%${q.replace(/%/g, "\\%")}%`;
+    query = query.or(`title.ilike.${like},content.ilike.${like}`);
+  }
 
   query = sort === "top" ? query.order("score", { ascending: false }) : query.order("created_at", { ascending: false });
 
@@ -64,12 +76,16 @@ router.post("/", requireAuth, async (req: AuthenticatedRequest, res) => {
   const client = createUserClient(req.token!);
   const { community_id, title, content, image_url } = parsed.data;
 
+  // Sanitize user input to prevent XSS
+  const sanitizedTitle = sanitizeInput(title);
+  const sanitizedContent = sanitizeInput(content);
+
   const { data, error } = await client
     .from("posts")
     .insert({
       community_id,
-      title,
-      content,
+      title: sanitizedTitle,
+      content: sanitizedContent,
       image_url: image_url || null,
       user_id: req.user!.id
     })
