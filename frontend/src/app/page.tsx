@@ -72,6 +72,38 @@ export default async function Home({
       {posts.map((post) => (
         <PostCard key={post.id} post={post} />
       ))}
+
+      {/* Add some dummy content for testing scroll */}
+      <div className="mt-8 space-y-4">
+        <div className="rounded-lg border border-mon-red/20 bg-white p-6 shadow-mon-card">
+          <h3 className="text-lg font-semibold text-mon-red mb-2">Scroll Test Content</h3>
+          <p className="text-slate-600">
+            This content is here to test the sticky navbar and sidebar functionality.
+            When you scroll down, the navbar should remain at the top of the page,
+            and the sidebar should stay in its position on the left side.
+          </p>
+        </div>
+
+        <div className="rounded-lg border border-mon-red/20 bg-white p-6 shadow-mon-card">
+          <h3 className="text-lg font-semibold text-mon-red mb-2">How to Test</h3>
+          <ul className="text-slate-600 space-y-1">
+            <li>• Scroll down this page</li>
+            <li>• Notice the navbar stays at the top</li>
+            <li>• Notice the sidebar stays in position</li>
+            <li>• Both should remain visible while scrolling</li>
+          </ul>
+        </div>
+
+        {Array.from({ length: 10 }, (_, i) => (
+          <div key={i} className="rounded-lg border border-mon-red/20 bg-white p-6 shadow-mon-card">
+            <h3 className="text-lg font-semibold text-mon-red mb-2">Test Block {i + 1}</h3>
+            <p className="text-slate-600">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

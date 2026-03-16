@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <SidebarDrawerProvider>
           <Navbar />
-          <div className="mx-auto flex max-w-6xl gap-6 px-4 pb-8 pt-6">
+          <div className="mx-auto flex max-w-6xl gap-6 px-4 pb-8 pt-6 min-h-screen">
             <Sidebar />
             <main className="flex-1">{children}</main>
           </div>

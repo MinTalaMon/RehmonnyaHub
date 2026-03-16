@@ -44,7 +44,7 @@ export default function Sidebar() {
   };
 
   const sidebarContent = (
-    <div className="flex h-full flex-col gap-4">
+    <div className="flex h-full flex-col gap-4 pb-4">
       {/* Main Navigation */}
       <div className="rounded-lg border border-mon-red/20 bg-white p-4 shadow-mon-card">
         <h2 className="mb-3 text-lg font-semibold text-mon-red">Navigation</h2>
@@ -113,7 +113,7 @@ export default function Sidebar() {
       </div>
 
       {/* Footer Links */}
-      <div className="rounded-lg border border-mon-red/20 bg-white p-4 shadow-mon-card">
+      <div className="rounded-lg border border-mon-red/20 bg-white p-4 shadow-mon-card mt-auto">
         <h2 className="mb-3 text-lg font-semibold text-mon-red">About</h2>
         <div className="space-y-1">
           <Link href="/about" className="block text-sm text-slate-600 hover:text-mon-red transition">
@@ -136,7 +136,7 @@ export default function Sidebar() {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden w-64 shrink-0 flex-col gap-4 lg:flex">{sidebarContent}</aside>
+      <aside className="sticky top-16 hidden h-[calc(100vh-4rem)] w-64 shrink-0 flex-col gap-4 overflow-y-auto lg:flex">{sidebarContent}</aside>
 
       {/* Mobile drawer overlay */}
       {drawerOpen ? (
@@ -146,7 +146,7 @@ export default function Sidebar() {
             onClick={() => setDrawerOpen(false)}
             aria-hidden="true"
           />
-          <div className="relative z-50 flex w-72 flex-col border-r border-mon-red/20 bg-mon-surface p-4">
+          <div className="sticky top-16 relative z-50 flex h-[calc(100vh-4rem)] w-72 flex-col border-r border-mon-red/20 bg-mon-surface p-4 overflow-y-auto">
             {sidebarContent}
           </div>
         </div>

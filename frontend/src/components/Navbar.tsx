@@ -53,7 +53,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="border-b border-mon-red/20 bg-white">
+    <nav className="sticky top-0 z-50 border-b border-mon-red/20 bg-white shadow-sm">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 p-4">
         <button
           type="button"
